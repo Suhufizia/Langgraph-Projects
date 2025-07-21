@@ -7,8 +7,4 @@ langchain_groq
 faiss-cpu
 pypdf
 tavily-python
-<<<<<<< HEAD
 langgraph
-=======
-langgraph
->>>>>>> f9c688c4d4cd811c52612e5550a0342e9ae73f19
