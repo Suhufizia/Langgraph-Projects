@@ -32,6 +32,6 @@ class DisplayResultStreamlit:
         elif self.usecase == "PDF Summarization":
             st.write("**Summary:**")
             st.write(result.get("summary", "No summary generated."))
-        elif self.usecase == "PDF Web Search":
+        elif self.usecase == "Web Search":
             st.write("**Web Search Results:**")
             st.write(result.get("tool_results", "No results generated."))

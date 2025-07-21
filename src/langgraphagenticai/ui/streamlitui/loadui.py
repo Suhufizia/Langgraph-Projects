@@ -18,27 +18,47 @@ class LoadStreamlitUI:
         self.user_controls["selected_llm"] = st.selectbox("Select LLM", llm_options)
         self.user_controls["selected_usecase"] = st.selectbox("Select Usecase", usecase_options)
 
-        # --- Conditional PDF upload logic ---
-        
+        # --- PDF upload logic ---
         if self.user_controls["selected_usecase"] in ["PDF Q&A", "PDF Summarization"]:
             pdf_file = st.file_uploader("Upload PDF", type=["pdf"])
             self.user_controls["pdf_file"] = pdf_file
-        elif self.user_controls["selected_usecase"] == "PDF Web Search":
-            # No PDF upload shown at all
-            self.user_controls["pdf_file"] = None
         else:
             self.user_controls["pdf_file"] = None
-        # -------------------------------------
 
-        if self.user_controls["selected_usecase"] == "PDF Web Search":
+        # --- Tavily API Key for Web Search ---
+        if self.user_controls["selected_usecase"] == "Web Search":
             self.user_controls["TAVILY_API_KEY"] = st.text_input("Tavily API Key", type="password")
+        else:
+            self.user_controls["TAVILY_API_KEY"] = None
 
-        # Always prompt for Groq API key and model if Groq is selected
+        # --- Groq API Key and model ---
         if self.user_controls["selected_llm"] == 'Groq':
             groq_models = self.config.get_groq_model_options()
             self.user_controls["selected_groq_model"] = st.selectbox("Select Groq Model", groq_models)
             self.user_controls["GROQ_API_KEY"] = st.text_input("GROQ API Key", type="password")
-            if not self.user_controls["GROQ_API_KEY"]:
-                st.warning("Please enter your GROQ API key to proceed.")
+        else:
+            self.user_controls["selected_groq_model"] = None
+            self.user_controls["GROQ_API_KEY"] = None
+
+        # --- Required Fields Check ---
+        proceed = st.button("Proceed")
+        if proceed:
+            missing = []
+            if self.user_controls["selected_usecase"] in ["PDF Q&A", "PDF Summarization"]:
+                if not self.user_controls["pdf_file"]:
+                    missing.append("PDF file")
+            if self.user_controls["selected_usecase"] == "Web Search":
+                if not self.user_controls["TAVILY_API_KEY"]:
+                    missing.append("Tavily API Key")
+            if self.user_controls["selected_llm"] == "Groq":
+                if not self.user_controls["GROQ_API_KEY"]:
+                    missing.append("GROQ API Key")
+                if not self.user_controls["selected_groq_model"]:
+                    missing.append("Groq Model")
+            if missing:
+                st.warning(f"Please provide the following required fields: {', '.join(missing)}")
+            else:
+                st.success("All required fields provided. Proceeding with your request.")
+                # Place your main logic here
 
         return self.user_controls

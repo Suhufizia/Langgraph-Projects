@@ -33,6 +33,6 @@ class PDFGraphBuilder:
             self.build_pdf_qa_graph()
         elif usecase == "PDF Summarization":
             self.build_pdf_summary_graph()
-        elif usecase == "PDF Web Search":
+        elif usecase == "Web Search":
             self.build_pdf_tool_search_graph()
         return self.graph_builder.compile()

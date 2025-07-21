@@ -26,15 +26,20 @@ def load_pdf_agenticai_app():
         st.warning("Please provide both GROQ API key and model.")
         return
 
-    if usecase != "PDF Summarization":
-        user_message = st.text_input(
-            "Ask a question about the PDF, type 'summarize'"
-        )
+    if usecase == "PDF Q&A":
+        prompt_label = "Ask a question about the PDF"
+    elif usecase == "Web Search":
+        prompt_label = "Ask your query (web search)"
     else:
+        prompt_label = "Ask your question"
+
+    if usecase == "PDF Summarization":
         user_message = "summarize"
+    else:
+        user_message = st.text_input(prompt_label)
 
     # --- EDITED LOGIC BELOW ---
-    if usecase == "PDF Web Search":
+    if usecase == "Web Search":
         should_run = user_message and selected_llm == "Groq" and tavily_api_key
     elif usecase == "PDF Summarization":
         should_run = pdf_file and selected_llm == "Groq"
